@@ -18,7 +18,7 @@
 
     <form action="index.html" method="post">
 
-      <fieldset>
+      <fieldset class = 'job'>
         <legend>Basic Info</legend>
 
         <label for="name">Name:</label>
@@ -35,7 +35,8 @@
           <option value="designer">Designer</option>
           <option value="student">Student</option>
           <option value="other">Other</option>
-        </select>
+        </select><br>
+        <textarea id='other-title' placeholder = 'Your job role'></textarea>
       </fieldset>
 
       <fieldset class="shirt">
@@ -137,11 +138,11 @@
           </select>
         </div>
 
-        <div>
+        <div id='pay-pal'>
         	<p>If you selected the PayPal option we'll take you to Paypal's site to set up your billing information, when you click “Register” below.</p>
         </div>
 
-        <div>
+        <div id='bitcoin'>
         	<p>If you selected the Bitcoin option we'll take you to the Coinbase site to set up your billing information. Due to the nature of exchanging Bitcoin, all Bitcoin transactions will be final.</p>
         </div>
 
