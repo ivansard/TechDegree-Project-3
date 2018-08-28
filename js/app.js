@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
   colorDiv.style.display = 'none';
 
   //Adding classes to the color elements based on their design
-  const colors = document.querySelector('#color').children;
+  const colorSelectField = document.querySelector('#color')
+  const colors = colorSelectField.children;
   for (var i = 0; i < colors.length; i++) {
     if(colors[i].textContent.includes(`I \u2665 JS`)){
       colors[i].className = "heart js";
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             colors[i].style.display = 'none';
           } else{
             colors[i].style.display = '';
+            colorSelectField.value = colors[i].value;
           }
         }
       break;
@@ -76,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             colors[i].style.display = 'none';
           } else{
             colors[i].style.display = '';
+            colorSelectField.value = colors[i].value;
           }
         }
       break;
@@ -83,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (var i = 0; i < colors.length; i++) {
         if(colors[i].className !== event.target.value){
             colors[i].style.display = '';
+            colorSelectField.value = '';
         }
       }
       break;
@@ -91,9 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //Function that returns the day and time of an activity
-function getDayAndTimeOfActivity(activityCheckbox){
-  return activityCheckbox.parentNode.textContent.split('—')[1];
-}
+  function getDayAndTimeOfActivity(activityCheckbox){
+    return activityCheckbox.parentNode.textContent.split('—')[1];
+  }
 
 
   const activitiesFieldset = document.querySelector('.activities');
@@ -105,7 +109,7 @@ function getDayAndTimeOfActivity(activityCheckbox){
 
   //Initial hiding of the message, and appending it to the activity fieldset
   function createAndAppendPayoutMessage(){
-    payoutMessage.textContent = `Your total amount is: ${totalPayout}$`;
+    payoutMessage.textContent = `Your total amount is: $${totalPayout}`;
     payoutMessage.style.display = 'none';
     activitiesFieldset.appendChild(payoutMessage);
   }
@@ -126,9 +130,9 @@ function getDayAndTimeOfActivity(activityCheckbox){
 
       //Updating and displaying the amount and message
       totalPayout += parseInt(priceOfActivity);
-      payoutMessage.textContent = `Your total amount is: ${totalPayout}$`
+      payoutMessage.textContent = `Your total amount is:  $${totalPayout}`
       payoutMessage.style.display = 'block';
-      //Disabling activities which are at the same tim
+      //Disabling activities which are at the same time
       for (var i = 0; i < activityCheckboxes.length; i++) {
         if(getDayAndTimeOfActivity(activityCheckboxes[i]) === dayAndTimeOfActivity && activityCheckboxes[i] !== checkbox){
           activityCheckboxes[i].disabled = true;
@@ -138,7 +142,7 @@ function getDayAndTimeOfActivity(activityCheckbox){
       } else{
       //Updating amount and message, and if amount is 0 no message is displayed
       totalPayout -= parseInt(priceOfActivity);
-      payoutMessage.textContent = `Your total amount is: ${totalPayout}$`
+      payoutMessage.textContent = `Your total amount is: $${totalPayout}`
       if(totalPayout === 0){
         payoutMessage.style.display = 'none';
       }
@@ -155,6 +159,8 @@ function getDayAndTimeOfActivity(activityCheckbox){
 
   //Setting credit card to be displayed
     function setCreditCardSectionAsDefault(){
+      const paymentSelectField = document.querySelector('#payment');
+      paymentSelectField.value = 'credit card';
       const payPalSection = document.querySelector('#pay-pal');
       payPalSection.style.display = 'none';
       const bitcoinSection = document.querySelector('#bitcoin');
@@ -309,21 +315,19 @@ function getDayAndTimeOfActivity(activityCheckbox){
       const validatedCVV = validateInputWithLabelAndField(cvvInput, cvv, cvvLabel,!cvv.match(/[0-9]{3}/) ||  cvv.length > 3
       , 'CVV:', 'Must be 3 digits');
 
+
       const creditCardInput = document.querySelector('#cc-num');
       const creditCardLabel = document.querySelector("label[for='cc-num']");
-      const creditCardNumber = document.querySelector('#cc-num').value;
+      const creditCardNumber = creditCardInput.value;
 
-      //Validating only if the user hasn't inserted any info about the credit card
-      //number, since my real-time validation function will take care of all other cases
-      if(creditCardNumber.length === 0){
-        creditCardLabel.textContent = 'Must be 13-16 digits';
-        creditCardLabel.classList.add('invalid');
-        creditCardInput.classList.add('invalid');
-        return false;
-      }
+      const validatedCreditCard = validateInputWithLabelAndField(creditCardInput, creditCardNumber, creditCardLabel,
+      !creditCardNumber.match(/[0-9]{13,16}/) || creditCardNumber.match(/[^0-9]/) || creditCardNumber.length > 16,
+       'Card Number:', 'Invalid credit card number!');
 
-      return validatedZip && validatedCVV;
+      return validatedZip && validatedCVV && validatedCreditCard;
     }
+
+
 
     //Real time validation for credit card field (As I understood the tasks)
     function realTimeErrorForCreditCard(){
@@ -370,10 +374,5 @@ function getDayAndTimeOfActivity(activityCheckbox){
         form.submit();
       }
     });
-
-
-
-
-
 
 });
